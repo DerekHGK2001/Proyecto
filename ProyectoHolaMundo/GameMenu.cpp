@@ -11,6 +11,7 @@
 #include "Rueda.h"
 #include "Preguntas.h"
 #include "Nivel2.h"
+#include "Nivel3.h"
 #include <time.h>
 #include <random>
 #include <windows.h> 
@@ -142,6 +143,7 @@ const char* PuntosS = "0";
 bool estruMap(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* background)
 {
     Nivel2 nivel2;
+    Nivel3 nivel3;
     int currentMap = 1;
     //pantalla de mapa
     //Registro de mouse y teclado
@@ -245,7 +247,8 @@ bool estruMap(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* backgroun
                     }
                     else if (currentMap == 3)
                     {
-                        entrarNivel3(font, color, background, currentMap);
+                        nivel3.Logica();
+                        al_flush_event_queue(queue);
                     }
                     refresh = true;
                 }
