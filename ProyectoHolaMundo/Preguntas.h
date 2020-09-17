@@ -2,18 +2,19 @@
 #ifndef PREGUNTAS_H
 #define PREGUNTAS_H
 #include <string>
+#include <string.h>
+#include <fstream>
+#include <iostream>
 using namespace std;
 
 class Preguntas {
 public:
 	Preguntas();
-	string escogerPregunta(int, int);
-	int escogerRespuesta(int, int);
 
+	string buscarPregunta(int, int);
+	int cantiPreguntas(int);
+	int obtenerRespuesta(int, int);
 private:
-	string bancoPreguntas[4][5];
-	//string opciones[4][5];
-	int respuesta[4][5];
 
 };
 
