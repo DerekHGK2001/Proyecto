@@ -133,12 +133,12 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
             al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, Preguntas[randPreg].c_str());
         if (a == 1) {
             if (vida1P == 0) {
-                al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, "Jugador 2 ha ganado!\nPresione la tecla espacio para pasar al siguiente nivel");
+                al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, "Jugador 2 ha ganado!Felicidades!\nPresione la tecla espacio para pasar al siguiente nivel");
                 al_attach_sample_instance_to_mixer(songInstanceR, al_get_default_mixer());
                 al_play_sample_instance(songInstanceR);
             }
             else if (vida2P == 0) {
-                al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, "Jugador 1 ha ganado!\nPresione la tecla espacio para pasar al siguiente nivel");
+                al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, "Jugador 1 ha ganado!Felicidades!\nPresione la tecla espacio para pasar al siguiente nivel");
                 al_attach_sample_instance_to_mixer(songInstanceE, al_get_default_mixer());
                 al_play_sample_instance(songInstanceE);
             }
@@ -364,11 +364,11 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
             }
             else if (respuesta1P == respuestas[randPreg] && respuesta2P == respuestas[randPreg])
             {
-
+                al_draw_text(font, al_map_rgb(255, 0, 0), 290, 110, 0, "EMPATE");
             }
             else if (respuesta1P != respuestas[randPreg] && respuesta2P != respuestas[randPreg])
             {
-
+                al_draw_text(font, al_map_rgb(255, 0, 0), 290, 110, 0, "INCORRECTO");
             }
 
             respuesta1P = -1;
