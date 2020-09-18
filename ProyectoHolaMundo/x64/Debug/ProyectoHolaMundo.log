@@ -1,3 +1,2 @@
-﻿  GameMenu.cpp
-C:\temp\Proyecto\ProyectoHolaMundo\GameMenu.cpp(420): warning C4715: 'entrarNivel1': not all control paths return a value
-  ProyectoHolaMundo.vcxproj -> C:\temp\Proyecto\x64\Debug\ProyectoHolaMundo.exe
+﻿  Nivel2.cpp
+  ProyectoHolaMundo.vcxproj -> C:\Users\Dell\Desktop\ProyectoLaboratorio-master-master\x64\Debug\ProyectoHolaMundo.exe

@@ -4,7 +4,7 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 using namespace std;
-Nivel2::Nivel2() :vida1P(100), vida2P(100), respuesta1P(-1), respuesta2P(-1), listo1P(false), listo2P(false), ataca1P(false), ataca2P(false)
+Nivel2::Nivel2() :vida1P(100), vida2P(100), respuesta1P(-1), respuesta2P(-1), listo1P(false), listo2P(false), ataca1P(false), ataca2P(false), empate(false), olvido(false)
 {
 
 }
@@ -12,6 +12,7 @@ bool run;
 int a;
 void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* background, int currentMap)
 {
+
     al_rest(0.2);
     a = 0;
     run = true;
@@ -105,12 +106,14 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
             al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, buscarPregunta(randPreg).c_str());
         if (a == 1) {
             if (vida1P == 0) {
-                al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, "Jugador 2 ha ganado!Felicidades!\nPresione la tecla espacio para pasar al siguiente nivel");
+                ALLEGRO_BITMAP* nuevo = al_load_bitmap("ganado2.jpg");
+                al_draw_bitmap(nuevo, 0, 0, 0);
                 al_attach_sample_instance_to_mixer(songInstanceR, al_get_default_mixer());
                 al_play_sample_instance(songInstanceR);
             }
             else if (vida2P == 0) {
-                al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, "Jugador 1 ha ganado!Felicidades!\nPresione la tecla espacio para pasar al siguiente nivel");
+                ALLEGRO_BITMAP* nuevo = al_load_bitmap("ganado1.jpg");
+                al_draw_bitmap(nuevo, 0, 0, 0);
                 al_attach_sample_instance_to_mixer(songInstanceE, al_get_default_mixer());
                 al_play_sample_instance(songInstanceE);
             }
@@ -141,6 +144,7 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
         else if (vida2P == 0) {
             a = 1;
         }
+
         if (listo1P)
         {
             al_draw_text(font, al_map_rgb(255, 0, 0), 100, 110, 0, "LISTO");
@@ -225,7 +229,7 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
                 break;
 
             case ALLEGRO_EVENT_TIMER:
-                if (ataca1P || ataca2P) {
+                if (ataca1P || ataca2P || empate || olvido) {
                     if (++frameCount >= frameDelay)
                     {
                         if (++curFrame >= maxFrame) {
@@ -236,6 +240,8 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
                             if (ataca2P)
                                 vida1P -= 20;
 
+                            olvido = false;
+                            empate = false;
                             ataca1P = false;
                             ataca2P = false;
                         }
@@ -250,6 +256,8 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
         al_draw_bitmap(background, 0, 0, 0);
         if (ataca1P)
         {
+            //
+            al_draw_text(font2, al_map_rgb(255, 0, 0), 260, 0, 0, "Jugador 1, Respondio bien");
             switch (curFrame)
             {
             case 0:
@@ -289,6 +297,7 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
 
         if (ataca2P)
         {
+            al_draw_text(font2, al_map_rgb(255, 0, 0), 260, 0, 0, "Jugador 2, Respondio bien");
             switch (curFrame)
             {
             case 0:
@@ -323,6 +332,14 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
         else {
             al_draw_bitmap_region(sprite2P, 0, 135, 90, 271, 500, 300, ALLEGRO_FLIP_HORIZONTAL);
         }
+        if (empate) {
+            al_draw_text(font2, al_map_rgb(255, 0, 0), 260, 0, 0, "Ambos jugadores respondieron bien, es un empate");
+
+        }
+        if (olvido) {
+            al_draw_text(font2, al_map_rgb(255, 0, 0), 260, 0, 0, "Ningun jugador respondio bien");
+
+        }
 
         if (respuesta1P != -1 && respuesta2P != -1)
         {
@@ -336,16 +353,17 @@ void Nivel2::Logica(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* bac
             }
             else if (respuesta1P == obtenerRespuesta(randPreg) && respuesta2P == obtenerRespuesta(randPreg))
             {
-                al_draw_text(font, al_map_rgb(255, 0, 0), 0, 110, 0, "EMPATE");
+                empate = true;
             }
             else if (respuesta1P != obtenerRespuesta(randPreg) && respuesta2P != obtenerRespuesta(randPreg))
             {
-                al_draw_text(font, al_map_rgb(255, 0, 0), 0, 110, 0, "INCORRECTO");
+                olvido = true;
             }
 
             respuesta1P = -1;
             respuesta2P = -1;
             listo1P = false;
+
             listo2P = false;
             posicion = 0;
         }
