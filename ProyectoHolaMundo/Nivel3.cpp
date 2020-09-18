@@ -174,14 +174,12 @@ int Nivel3::cantiPreguntas(bool kant) {
 }
 
 int Nivel3::obtenerRespuesta(int _cod, bool kant) {
-    string path;
+    ifstream NivelIn;
 
     if (kant)
-        path = "PreguntasNivel3/Nivel3-kant.dat";
+        NivelIn.open("PreguntasNivel3/Nivel3-kant.dat", ios::in);
     else
-        path = "PreguntasNivel3/Nivel3-descartes.dat";
-
-    ifstream NivelIn(path.c_str(), ios::in);
+        NivelIn.open("PreguntasNivel3/Nivel3-descartes.dat", ios::in);
 
     if (!NivelIn) {
         return -1;
@@ -206,7 +204,7 @@ void Nivel3::jugar(bool kant)
     ALLEGRO_EVENT event;
     ALLEGRO_EVENT_QUEUE* queue;
     ALLEGRO_BITMAP* fondo;
-    ALLEGRO_FONT* font2 = al_load_ttf_font("YARDSALE.ttf", 36, 0);
+    ALLEGRO_FONT* font2 = al_load_ttf_font("YARDSALE.ttf", 24, 0);
 
     al_clear_to_color(al_map_rgb(0, 0, 0));
     queue = al_create_event_queue();
@@ -216,7 +214,7 @@ void Nivel3::jugar(bool kant)
     al_register_event_source(queue, al_get_timer_event_source(timer));
 
     bool done = false;
-
+    bool respuesta = false;
     int pregunta = 0;
     al_start_timer(timer);
     while (true) {
@@ -244,6 +242,8 @@ void Nivel3::jugar(bool kant)
                         al_clear_to_color(al_map_rgb(255, 0, 0));
                         al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
                     }
+                    pregunta++;
+                    respuesta = true;
                     break;
 
                 }
@@ -256,6 +256,8 @@ void Nivel3::jugar(bool kant)
                         al_clear_to_color(al_map_rgb(255, 0, 0));
                         al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
                     }
+                    pregunta++;
+                    respuesta = true;
                     break;
                 }
                 else if (event.keyboard.keycode == ALLEGRO_KEY_3) {
@@ -267,6 +269,8 @@ void Nivel3::jugar(bool kant)
                         al_clear_to_color(al_map_rgb(255, 0, 0));
                         al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
                     }
+                    pregunta++;
+                    respuesta = true;
                     break;
                 }
                 else if (event.keyboard.keycode == ALLEGRO_KEY_4) {
@@ -278,21 +282,30 @@ void Nivel3::jugar(bool kant)
                         al_clear_to_color(al_map_rgb(255, 0, 0));
                         al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
                     }
+                    pregunta++;
+                    respuesta = true;
                 }
+                
                 break;
 
+        
+            }
         case ALLEGRO_EVENT_TIMER:
             break;
-            }
-
-            if (done) {
-
-                break;
-            }
-            pregunta++;
-            al_rest(2);
+           
         }
 
-        al_destroy_font(font2);
+        if (respuesta)
+        {
+            al_flip_display();
+            al_rest(2);
+            respuesta = false;
+        }
+
+        if (done || pregunta > 4) {
+
+            break;
+        }
     }
+    al_destroy_font(font2);
 }
