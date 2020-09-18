@@ -1,4 +1,2 @@
 ﻿  Nivel3.cpp
-C:\temp\Proyecto\ProyectoHolaMundo\Nivel3.cpp(20,21): warning C4101: 'fondo': unreferenced local variable
-C:\temp\Proyecto\ProyectoHolaMundo\Nivel3.cpp(206,21): warning C4101: 'fondo': unreferenced local variable
-  ProyectoHolaMundo.vcxproj -> C:\temp\Proyecto\x64\Debug\ProyectoHolaMundo.exe
+  ProyectoHolaMundo.vcxproj -> C:\Users\Angella Falck\Source\Repos\Proyecto\x64\Debug\ProyectoHolaMundo.exe

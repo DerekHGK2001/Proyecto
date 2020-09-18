@@ -21,7 +21,7 @@ class Nivel3
 {
 public:
 	Nivel3();
-	void Logica();
+	bool Logica();
 
 private:
 	void must_init(bool, const char*);

@@ -246,8 +246,13 @@ bool estruMap(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* backgroun
                     }
                     else if (currentMap == 3)
                     {
-                        nivel3.Logica();
+                        if (nivel3.Logica())
+                        {
+                            return true;
+                        }
+
                         al_flush_event_queue(queue);
+                        
                     }
                     refresh = true;
                 }
@@ -257,7 +262,7 @@ bool estruMap(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* backgroun
 
         if (done) {
             cargar = 0;
-            return true;
+            return false;
         }
     }
 }
@@ -580,7 +585,7 @@ bool entrarNivel3(ALLEGRO_FONT* font, ALLEGRO_COLOR color, ALLEGRO_BITMAP* backg
 
     bool done = false;
 
-    background = al_load_bitmap("nivel3.jpeg");;
+    background = al_load_bitmap("nivel3.jpeg");
     al_draw_bitmap(background, 0, 0, 0);
     al_draw_text(font, al_map_rgb(0, 0, 0), 300, 0, 0, "Nivel 3");
     botonVolver(font, color, background);
@@ -718,7 +723,11 @@ int main()
                 color = azul;
                 boton3(font2, color, background);
                 //pantalla mapa
-                estruMap(font2, color, background);
+                
+                if (estruMap(font2, color, background))
+                {
+                    done = true;
+                }
             }
             break;
 
