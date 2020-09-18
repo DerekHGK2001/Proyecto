@@ -1,7 +1,4 @@
-﻿  GameMenu.cpp
-  Nivel2.cpp
-  Preguntas.cpp
-  Rueda.cpp
-  Generating Code...
-C:\Users\Dell\Desktop\ProyectoLaboratorio-master-master\ProyectoHolaMundo\GameMenu.cpp(416): warning C4715: 'entrarNivel1': not all control paths return a value
-  ProyectoHolaMundo.vcxproj -> C:\Users\Dell\Desktop\ProyectoLaboratorio-master-master\x64\Debug\ProyectoHolaMundo.exe
+﻿  Nivel3.cpp
+C:\temp\Proyecto\ProyectoHolaMundo\Nivel3.cpp(20,21): warning C4101: 'fondo': unreferenced local variable
+C:\temp\Proyecto\ProyectoHolaMundo\Nivel3.cpp(209,21): warning C4101: 'fondo': unreferenced local variable
+  ProyectoHolaMundo.vcxproj -> C:\temp\Proyecto\x64\Debug\ProyectoHolaMundo.exe

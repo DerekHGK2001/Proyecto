@@ -1,5 +1,6 @@
 #include "Nivel3.h"
-
+#include <string>
+#include <stdio.h>
 Nivel3::Nivel3()
 {
 
@@ -26,10 +27,6 @@ void Nivel3::Logica()
     al_clear_to_color(al_map_rgb(0, 0, 0));
     queue = al_create_event_queue();
     must_init(queue, "queue");
-    must_init(al_init_image_addon(), "image");
-    must_init(al_install_mouse(), "mouse");
-    must_init(al_install_keyboard(), "keyboard");
-    must_init(al_init_primitives_addon(), "primitives");
     al_register_event_source(queue, al_get_mouse_event_source());
     al_register_event_source(queue, al_get_keyboard_event_source());
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
@@ -66,11 +63,15 @@ void Nivel3::Logica()
         case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
             if (hoverBoton1)
             {
-
+                jugar(true);
+                jugar(false);
+                al_flush_event_queue(queue);
             }
             else if (hoverBoton2)
             {
-
+                jugar(false);
+                jugar(true);
+                al_flush_event_queue(queue);
             }
             break;
         case ALLEGRO_EVENT_KEY_DOWN:
@@ -98,5 +99,200 @@ void Nivel3::Logica()
             break;
         }
 
+    }
+
+    al_destroy_font(font);
+    al_destroy_font(font2);
+}
+
+string Nivel3::buscarPregunta(int _codigo, bool kant) {
+
+    ifstream NivelIn;
+
+    if (kant)
+        NivelIn.open("PreguntasNivel3/Nivel3-kant.dat", ios::in);
+    else
+        NivelIn.open("PreguntasNivel3/Nivel3-descartes.dat", ios::in);
+
+    
+
+    if (!NivelIn) {
+        return "Error al intentar abrir el archivo.";
+    }
+
+    int codP;
+    int p;
+    char nombre[1000];
+    string volver;
+    while (NivelIn >> codP >> nombre >> p) {
+        if (codP == _codigo)
+        {
+            for (int x = 0; x < 1000;x++) {
+                if (nombre[x] == ' ') {
+                    volver = nombre;
+                    return volver;
+                }
+                if (nombre[x] == '-') {
+                    nombre[x] = ' ';
+                }
+                else if (nombre[x] == '/') {
+                    nombre[x] = '\n';
+                }
+            }
+            volver = nombre;
+            NivelIn.close();
+            return volver;
+        }
+    }
+    NivelIn.close();
+    return "No logro entrar revisar el archivo de texto.";
+}
+
+int Nivel3::cantiPreguntas(bool kant) {
+    string path;
+
+    if (kant)
+        path = "PreguntasNivel3/Nivel3-kant.dat";
+    else
+        path = "PreguntasNivel3/Nivel3-descartes.dat";
+
+    ifstream NivelIn(path.c_str(), ios::in);
+
+    if (!NivelIn) {
+        return -1;
+    }
+
+    int codP;
+    int p;
+    char nombre[1000];
+    int total = 0;
+    while (NivelIn >> codP >> nombre >> p) {
+        total = total + 1;
+    }
+    NivelIn.close();
+    return total;
+}
+
+int Nivel3::obtenerRespuesta(int _cod, bool kant) {
+    string path;
+
+    if (kant)
+        path = "PreguntasNivel3/Nivel3-kant.dat";
+    else
+        path = "PreguntasNivel3/Nivel3-descartes.dat";
+
+    ifstream NivelIn(path.c_str(), ios::in);
+
+    if (!NivelIn) {
+        return -1;
+    }
+
+    int codP;
+    int p;
+    char nombre[1000];
+    string volver;
+    while (NivelIn >> codP >> nombre >> p) {
+        if (codP == _cod)
+        {
+            NivelIn.close();
+            return p;
+        }
+    }
+    return -1;
+}
+
+void Nivel3::jugar(bool kant)
+{
+    ALLEGRO_EVENT event;
+    ALLEGRO_EVENT_QUEUE* queue;
+    ALLEGRO_BITMAP* fondo;
+    ALLEGRO_FONT* font2 = al_load_ttf_font("YARDSALE.ttf", 36, 0);
+
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    queue = al_create_event_queue();
+    must_init(queue, "queue");
+    al_register_event_source(queue, al_get_keyboard_event_source());
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
+    al_register_event_source(queue, al_get_timer_event_source(timer));
+
+    bool done = false;
+
+    int pregunta = 0;
+    al_start_timer(timer);
+    while (true) {
+
+        al_clear_to_color(al_map_rgb(0, 0, 0));
+        al_draw_filled_rectangle(200, 200, 350, 250, al_map_rgb(0, 0, 0));
+        //al_draw_text(font, al_map_rgb(255, 255, 255), 660, 60, 0, "");
+        al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, buscarPregunta(pregunta, kant).c_str());
+        al_flip_display();
+        al_wait_for_event(queue, &event);
+        switch (event.type)
+        {
+        case ALLEGRO_EVENT_KEY_DOWN:
+            if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+                if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                    done = true;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_1) {
+
+                    if (obtenerRespuesta(pregunta, kant) == 0) {
+                        al_clear_to_color(al_map_rgb(0, 255, 0));
+                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "Asi me gusta lo has hecho muy bien");
+                    }
+                    else {
+                        al_clear_to_color(al_map_rgb(255, 0, 0));
+                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
+                    }
+                    break;
+
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_2) {
+                    if (obtenerRespuesta(pregunta, kant) == 1) {
+                        al_clear_to_color(al_map_rgb(0, 255, 0));
+                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "Asi me gusta lo has hecho muy bien");
+                    }
+                    else {
+                        al_clear_to_color(al_map_rgb(255, 0, 0));
+                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
+                    }
+                    break;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_3) {
+                    if (obtenerRespuesta(pregunta, kant) == 2) {
+                        al_clear_to_color(al_map_rgb(0, 255, 0));
+                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "Asi me gusta lo has hecho muy bien");
+                    }
+                    else {
+                        al_clear_to_color(al_map_rgb(255, 0, 0));
+                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
+                    }
+                    break;
+                }
+                else if (event.keyboard.keycode == ALLEGRO_KEY_4) {
+                    if (obtenerRespuesta(pregunta, kant) == 3) {
+                        al_clear_to_color(al_map_rgb(0, 255, 0));
+                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "Asi me gusta lo has hecho muy bien");
+                    }
+                    else {
+                        al_clear_to_color(al_map_rgb(255, 0, 0));
+                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
+                    }
+                }
+                break;
+
+        case ALLEGRO_EVENT_TIMER:
+            break;
+            }
+
+            if (done) {
+
+                break;
+            }
+            pregunta++;
+            al_rest(2);
+        }
+
+        al_destroy_font(font2);
     }
 }

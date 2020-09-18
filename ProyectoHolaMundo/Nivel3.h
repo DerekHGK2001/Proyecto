@@ -14,6 +14,7 @@
 #include <allegro5/allegro_acodec.h>
 #include <random>
 #include <stdio.h>
+#include <fstream>
 using namespace std;
 
 class Nivel3 
@@ -24,5 +25,9 @@ public:
 
 private:
 	void must_init(bool, const char*);
+	void jugar(bool);
+	string buscarPregunta(int, bool);
+	int cantiPreguntas(bool);
+	int obtenerRespuesta(int, bool);
 };
 #endif // !NIVEL3_H
