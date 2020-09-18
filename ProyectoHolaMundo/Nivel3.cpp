@@ -36,7 +36,7 @@ void Nivel3::Logica()
     al_start_timer(timer);
     while (true) {
        
-        al_clear_to_color(al_map_rgb(0, 0, 0));
+        al_clear_to_color(al_map_rgb(255, 255, 255));
         al_draw_filled_rectangle(200, 200, 350, 250, color1);
         al_draw_filled_rectangle(SCREENW-200, 200, SCREENW-350, 250, color2);
         //al_draw_text(font, al_map_rgb(255, 255, 255), 660, 60, 0, "");
@@ -219,8 +219,7 @@ void Nivel3::jugar(bool kant)
     al_start_timer(timer);
     while (true) {
 
-        al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_filled_rectangle(200, 200, 350, 250, al_map_rgb(0, 0, 0));
+        al_clear_to_color(al_map_rgb(255, 255, 255));
         //al_draw_text(font, al_map_rgb(255, 255, 255), 660, 60, 0, "");
         al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, buscarPregunta(pregunta, kant).c_str());
         al_flip_display();
