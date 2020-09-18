@@ -1,3 +1,4 @@
+
 #pragma once
 #ifndef NIVEL2_H
 #define NIVEL2_H
@@ -25,7 +26,8 @@ public:
 private:
 	int vida1P, respuesta1P, vida2P, respuesta2P;
 	bool listo1P, listo2P, ataca1P, ataca2P;
-
+	bool empate;
+	bool olvido;
 	void must_init(bool, const char*);
 	//Nuevo
 	string buscarPregunta(int);

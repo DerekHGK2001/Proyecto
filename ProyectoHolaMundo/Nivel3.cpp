@@ -13,13 +13,14 @@ void Nivel3::must_init(bool test, const char* description)
     exit(1);
 }
 
-void Nivel3::Logica()
+bool Nivel3::Logica()
 {
     ALLEGRO_EVENT event;
     ALLEGRO_EVENT_QUEUE* queue;
     ALLEGRO_BITMAP* fondo;
     ALLEGRO_FONT* font = al_load_ttf_font("YARDSALE.ttf", 64, 0);
     ALLEGRO_FONT* font2 = al_load_ttf_font("YARDSALE.ttf", 36, 0);
+    ALLEGRO_FONT* font3 = al_load_ttf_font("YARDSALE.ttf", 20, 0);
     ALLEGRO_COLOR azul = al_map_rgb(0, 0, 130);
     ALLEGRO_COLOR azulHover = al_map_rgb(0, 0, 255);
     ALLEGRO_COLOR color1=azul, color2=azul;
@@ -32,14 +33,19 @@ void Nivel3::Logica()
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
     al_register_event_source(queue, al_get_timer_event_source(timer));
 
+    fondo = al_load_bitmap("entrada.jpg");
+    al_draw_bitmap(fondo, 0, 0, 0);
+
     bool done = false;
     al_start_timer(timer);
     while (true) {
        
-        al_clear_to_color(al_map_rgb(255, 255, 255));
+        
+        //al_clear_to_color(al_map_rgb(255, 0, 0));
         al_draw_filled_rectangle(200, 200, 350, 250, color1);
         al_draw_filled_rectangle(SCREENW-200, 200, SCREENW-350, 250, color2);
-        //al_draw_text(font, al_map_rgb(255, 255, 255), 660, 60, 0, "");
+        al_draw_text(font3, al_map_rgb(255, 255, 255), 250, 210, 0, "Kant");
+        al_draw_text(font3, al_map_rgb(255, 255, 255), 465, 210, 0, "Descartes");
 
         al_flip_display();
         al_wait_for_event(queue, &event);
@@ -66,12 +72,14 @@ void Nivel3::Logica()
                 jugar(true);
                 jugar(false);
                 al_flush_event_queue(queue);
+                done = true;
             }
             else if (hoverBoton2)
             {
                 jugar(false);
                 jugar(true);
                 al_flush_event_queue(queue);
+                done = true;
             }
             break;
         case ALLEGRO_EVENT_KEY_DOWN:
@@ -103,6 +111,7 @@ void Nivel3::Logica()
 
     al_destroy_font(font);
     al_destroy_font(font2);
+    return true;
 }
 
 string Nivel3::buscarPregunta(int _codigo, bool kant) {
@@ -203,9 +212,12 @@ void Nivel3::jugar(bool kant)
 {
     ALLEGRO_EVENT event;
     ALLEGRO_EVENT_QUEUE* queue;
-    ALLEGRO_BITMAP* fondo;
-    ALLEGRO_FONT* font2 = al_load_ttf_font("YARDSALE.ttf", 24, 0);
+    ALLEGRO_BITMAP* fondo= nullptr;
+    ALLEGRO_BITMAP* fondo2 = al_load_bitmap("pasillo.jpg");
+    ALLEGRO_FONT* font2 = al_load_ttf_font("YARDSALE.ttf", 20, 0);
+    ALLEGRO_FONT* font3 = al_load_ttf_font("YARDSALE.ttf", 36, 0);
 
+    
     al_clear_to_color(al_map_rgb(0, 0, 0));
     queue = al_create_event_queue();
     must_init(queue, "queue");
@@ -213,16 +225,33 @@ void Nivel3::jugar(bool kant)
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
     al_register_event_source(queue, al_get_timer_event_source(timer));
 
+    if (kant)
+    {
+        fondo = al_load_bitmap("clase.jpg");
+        
+    }
+    else 
+    {
+        fondo = al_load_bitmap("lab.jpg");
+        //al_draw_bitmap(fondo, 0, 0, 0);
+    }
+    
+
     bool done = false;
     bool respuesta = false;
     int pregunta = 0;
     al_start_timer(timer);
+
     while (true) {
 
-        al_clear_to_color(al_map_rgb(255, 255, 255));
+        
+        //al_draw_bitmap(fondo, 0, 0, 0);
+        al_clear_to_color(al_map_rgb(0, 0, 0));
+        al_draw_bitmap(fondo, 0, 0, 0);
+       // al_draw_filled_rectangle(200, 200, 350, 250, al_map_rgb(0, 0, 0));
         //al_draw_text(font, al_map_rgb(255, 255, 255), 660, 60, 0, "");
-        al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 210, 110, 550, 40, 0, buscarPregunta(pregunta, kant).c_str());
-        al_flip_display();
+        al_draw_multiline_text(font2, al_map_rgb(255, 255, 255), 200, 100, 550, 40, 0, buscarPregunta(pregunta, kant).c_str());
+        
         al_wait_for_event(queue, &event);
         switch (event.type)
         {
@@ -234,12 +263,16 @@ void Nivel3::jugar(bool kant)
                 else if (event.keyboard.keycode == ALLEGRO_KEY_1) {
 
                     if (obtenerRespuesta(pregunta, kant) == 0) {
-                        al_clear_to_color(al_map_rgb(0, 255, 0));
-                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "Asi me gusta lo has hecho muy bien");
+                        //fondo2 = al_load_bitmap("pasillo.jpeg");
+                        al_draw_bitmap(fondo2, 0, 0, 0);
+                        //al_clear_to_color(al_map_rgb(0, 255, 0));
+                        al_draw_text(font3, al_map_rgb(255, 255, 0), 40, 90, 0, "Asi me gusta lo has hecho muy bien");
                     }
                     else {
-                        al_clear_to_color(al_map_rgb(255, 0, 0));
-                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
+                        //al_clear_to_color(al_map_rgb(255, 0, 0));
+                        //fondo2 = al_load_bitmap("pasillo.jpeg");
+                        al_draw_bitmap(fondo2, 0, 0, 0);
+                        al_draw_text(font3, al_map_rgb(255, 255, 0), 220, 90, 0, "No te rindas");
                     }
                     pregunta++;
                     respuesta = true;
@@ -248,12 +281,16 @@ void Nivel3::jugar(bool kant)
                 }
                 else if (event.keyboard.keycode == ALLEGRO_KEY_2) {
                     if (obtenerRespuesta(pregunta, kant) == 1) {
-                        al_clear_to_color(al_map_rgb(0, 255, 0));
-                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "Asi me gusta lo has hecho muy bien");
+                        //al_clear_to_color(al_map_rgb(0, 255, 0));
+                        //fondo2 = al_load_bitmap("pasillo.jpeg");
+                        al_draw_bitmap(fondo2, 0, 0, 0);
+                        al_draw_text(font3, al_map_rgb(255, 255, 0), 40, 90, 0, "Asi me gusta lo has hecho muy bien");
                     }
                     else {
-                        al_clear_to_color(al_map_rgb(255, 0, 0));
-                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
+                       // al_clear_to_color(al_map_rgb(255, 0, 0));
+                        //fondo2 = al_load_bitmap("pasillo.jpeg");
+                        al_draw_bitmap(fondo2, 0, 0, 0);
+                        al_draw_text(font3, al_map_rgb(255, 255, 0), 220, 90, 0, "No te rindas");
                     }
                     pregunta++;
                     respuesta = true;
@@ -261,12 +298,16 @@ void Nivel3::jugar(bool kant)
                 }
                 else if (event.keyboard.keycode == ALLEGRO_KEY_3) {
                     if (obtenerRespuesta(pregunta, kant) == 2) {
-                        al_clear_to_color(al_map_rgb(0, 255, 0));
-                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "Asi me gusta lo has hecho muy bien");
+                        //al_clear_to_color(al_map_rgb(0, 255, 0));
+                        //fondo2 = al_load_bitmap("pasillo.jpeg");
+                        al_draw_bitmap(fondo2, 0, 0, 0);
+                        al_draw_text(font3, al_map_rgb(255, 255, 0), 40, 90, 0, "Asi me gusta lo has hecho muy bien");
                     }
                     else {
-                        al_clear_to_color(al_map_rgb(255, 0, 0));
-                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
+                        //al_clear_to_color(al_map_rgb(255, 0, 0));
+                        //fondo2 = al_load_bitmap("pasillo.jpeg");
+                        al_draw_bitmap(fondo2, 0, 0, 0);
+                        al_draw_text(font3, al_map_rgb(255, 255, 0), 220, 90, 0, "No te rindas");
                     }
                     pregunta++;
                     respuesta = true;
@@ -274,12 +315,16 @@ void Nivel3::jugar(bool kant)
                 }
                 else if (event.keyboard.keycode == ALLEGRO_KEY_4) {
                     if (obtenerRespuesta(pregunta, kant) == 3) {
-                        al_clear_to_color(al_map_rgb(0, 255, 0));
-                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "Asi me gusta lo has hecho muy bien");
+                       // al_clear_to_color(al_map_rgb(0, 255, 0));
+                        //fondo2 = al_load_bitmap("pasillo.jpeg");
+                        al_draw_bitmap(fondo2, 0, 0, 0);
+                        al_draw_text(font3, al_map_rgb(255, 255, 0), 40, 90, 0, "Asi me gusta lo has hecho muy bien");
                     }
                     else {
-                        al_clear_to_color(al_map_rgb(255, 0, 0));
-                        al_draw_text(font2, al_map_rgb(0, 0, 0), 190, 50, 0, "No te rindas");
+                        //al_clear_to_color(al_map_rgb(255, 0, 0));
+                        
+                        al_draw_bitmap(fondo2, 0, 0, 0);
+                        al_draw_text(font3, al_map_rgb(255, 255, 0), 220, 90, 0, "No te rindas");
                     }
                     pregunta++;
                     respuesta = true;
@@ -297,14 +342,24 @@ void Nivel3::jugar(bool kant)
         if (respuesta)
         {
             al_flip_display();
-            al_rest(2);
+            al_rest(1);
             respuesta = false;
+        }
+        else
+        {
+            al_flip_display();
         }
 
         if (done || pregunta > 4) {
 
             break;
         }
+            
     }
+    al_clear_to_color(al_map_rgb(255, 0, 0));
+    fondo2 = al_load_bitmap("felicidades.png");
+    al_draw_bitmap(fondo2, 0, 0, 0);
+    al_flip_display();
+    al_rest(1);
     al_destroy_font(font2);
 }
